@@ -2,6 +2,7 @@
 
 namespace App\Container;
 
+
 class Container {
     private $services = [];
     private $aliases = [];
@@ -49,6 +50,29 @@ class Container {
         return [
             'services' => array_keys($this->services)
         ];
+    }
+
+    public function loadServices(string $namespace): void
+    {
+        $baseDir = __DIR__ .'/../';
+        
+        $actualDirectory = str_replace('\\', '/', $namespace);
+        
+        
+        $actualDirectory = $baseDir . substr(
+            $actualDirectory,
+            strpos($actualDirectory, '/') + 1
+        );
+
+        $files = array_filter(scandir($actualDirectory), function ($file) {
+            return $file !== '.' && $file !== '..';
+        });
+
+
+        //@todo: left off here.
+        foreach ($files as $file) {
+            $class = new \ReflectionClass($namespace . '\\' . basename());
+        }
     }
 }
 

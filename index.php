@@ -12,12 +12,17 @@ require __DIR__ . '/vendor/autoload.php';
 
 $container = new Container();
 
-$container->addService(Serializer::class, function () use ($container) {
-    return new Serializer(new JSON());
-});
-$container->addService(IndexController::class, function () use ($container) {
-    return new IndexController($container->getService(Serializer::class));
-});
+
+// $container->addService(IndexController::class, function () use ($container) {
+//     return new IndexController($container->getService(Serializer::class));
+// });
+
+
+$container->loadServices("App\\Formatter");
+$container->loadServices("App\\Service");
+
+
+
 
 /**
  * @var IndexController $indexController
