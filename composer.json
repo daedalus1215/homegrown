@@ -1,0 +1,16 @@
+{
+    "name": "ladam/basic",
+    "type": "project",
+    "authors": [
+        {
+            "name": "larry",
+            "email": "ladams1776@yahoo.com"
+        }
+    ],
+    "require": {
+        "phpunit/phpunit": "^7.5"
+    },
+    "autoload": {
+        "psr-4": {"App\\": "src/"}
+    }
+}
