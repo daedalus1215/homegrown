@@ -6,8 +6,11 @@ namespace App\Controller;
 
 
 use App\Service\Serializer;
- 
 
+
+/**
+ * @Route(route="/posts")
+ */
 class PostController {
     
     /** 
@@ -20,11 +23,29 @@ class PostController {
         $this->serializer = $serializer;
     }
 
+    /**
+     * @Route(route="/")
+     * @return string
+     */
     public function dispatch()
     {
         return $this->serializer->serialize(
             [
                 'Action' => 'Post',
+                'Time' => time()
+            ]
+        );
+    }
+
+    /**
+     * @Route(route="/one")
+     * @return string
+     */
+    public function one()
+    {
+        return $this->serializer->serialize(
+            [
+                'Action' => 'one',
                 'Time' => time()
             ]
         );

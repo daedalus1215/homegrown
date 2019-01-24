@@ -6,8 +6,11 @@ namespace App\Controller;
 
 
 use App\Service\Serializer;
- 
 
+
+/**
+ * @Route(route="/")
+ */
 class IndexController {
     
     /** 
@@ -20,6 +23,10 @@ class IndexController {
         $this->serializer = $serializer;
     }
 
+    /**
+     * @Route(route="/")
+     * @return string
+     */
     public function dispatch()
     {
         return $this->serializer->serialize(
