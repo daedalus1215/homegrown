@@ -69,7 +69,6 @@ class Container {
         });
 
 
-        //@todo: left off here.
         foreach ($files as $file) {
             $class = new \ReflectionClass($namespace . '\\' . basename($file, '.php'));
             $serviceName = $class->getName();
