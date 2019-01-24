@@ -18,7 +18,7 @@ class Container {
 
     public function addAlias(string $alias, string $service): void 
     {
-        $this->aliases[$alias] = $name;
+        $this->aliases[$alias] = $service;
     }
 
     public function hasAlias(string $name):bool 
@@ -29,7 +29,7 @@ class Container {
     public function getService(string $name)
     {
         if (!$this->hasService($name)) {
-            return new ContainerException("No identifier for service with the name of: ".$name);
+            throw new ContainerException("No identifier for service with the name of: ".$name);
         }
 
         if ($this->services[$name] instanceof \Closure) {
@@ -71,8 +71,35 @@ class Container {
 
         //@todo: left off here.
         foreach ($files as $file) {
-            $class = new \ReflectionClass($namespace . '\\' . basename());
+            $class = new \ReflectionClass($namespace . '\\' . basename($file, '.php'));
+            $serviceName = $class->getName();
+            var_dump($serviceName);
+            $constructor = $class->getConstructor();
+            $arguments = $constructor->getParameters();
+
+            // Parameters to inject into service  constructor
+            $serviceParameters = [];
+
+            foreach ($arguments as $argument) {
+                $type = (string) $argument->gettype();
+                if ($this->hasService($type) || $this->hasAlias($type)) {
+                    $serviceParameters[] = $this->getService($type) ?? $this->getAlias($type);      
+                } else {
+                    $serviceParameters[] = function() use ($type) {
+                        return $this->getService($type) ?? $this->getAlias($type);
+                    };
+                }
+            }
         }
+       $this->addService($serviceName, function () use ($serviceName, $serviceParameters) {
+           foreach($serviceParameters as &$serviceParameter) {
+                if ($serviceParameter instanceof \Closure) {
+                    $serviceParameter = $serviceParameter();
+                }
+           }
+
+           return new $serviceName(...$serviceParameters);
+       });
     }
 }
 
