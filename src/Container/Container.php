@@ -74,7 +74,7 @@ class Container {
         foreach ($files as $file) {
             $class = new \ReflectionClass($namespace . '\\' . basename($file, '.php'));
             $serviceName = $class->getName();
-            var_dump($serviceName);
+//            var_dump($serviceName);
             $constructor = $class->getConstructor();
             $arguments = $constructor->getParameters();
 

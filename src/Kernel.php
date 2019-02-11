@@ -21,6 +21,8 @@ use App\Annotations\Route;
 class Kernel
 {
     private $container;
+    private $routes;
+
 
     public function __construct()
     {
@@ -32,9 +34,13 @@ class Kernel
         return $this->container;
     }
 
+    /**
+     * @throws \Doctrine\Common\Annotations\AnnotationException
+     */
     public function boot()
     {
         $this->bootContainer($this->container);
+        return $this;
     }
 
     /**
@@ -90,11 +96,21 @@ class Kernel
             }
         }
         );
+
+        $this->routes = $routes;
     }
 
     public function handleRequest()
     {
         $uri = $_SERVER['REQUEST_URI'];
-        //@todo: left off here.
+
+//        var_dump($uri);
+
+        if (isset($this->routes[$uri])) {
+            $route = $this->routes[$uri];
+            $response = $this->container->getService($route['service']);
+            echo $response->{$route['method']}();
+            die;
+        }
     }
 }
